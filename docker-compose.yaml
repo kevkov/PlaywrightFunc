@@ -9,7 +9,7 @@ services:
             - 10001:10001
 
     local.isolated.azfunc:
-        container_name: az.func.asol
+        container_name: local.isolated.azfunc
         build:
             context: .
             dockerfile: Dockerfile
