@@ -1,0 +1,22 @@
+version: '3'
+services:
+
+    local.storage.emulator:
+        image: "mcr.microsoft.com/azure-storage/azurite:3.14.0"
+        container_name: local.storage.emulator
+        ports:
+            - 10000:10000
+            - 10001:10001
+
+    local.isolated.azfunc:
+        container_name: az.func.asol
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - 8080:80
+        environment:
+            # Copy .env variables through to container
+            - AzureWebJobsStorage
+        depends_on:
+            - local.storage.emulator
