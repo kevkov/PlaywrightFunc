@@ -8,8 +8,8 @@ services:
             - 10000:10000
             - 10001:10001
 
-    local.isolated.azfunc:
-        container_name: local.isolated.azfunc
+    playwright.func:
+        container_name: playwright.func
         build:
             context: .
             dockerfile: Dockerfile
