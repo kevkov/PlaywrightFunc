@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
+using Microsoft.Playwright;
 
 namespace AzFuncIsol
 {
@@ -14,12 +15,17 @@ namespace AzFuncIsol
         }
 
         [Function("TimerTriggeredFunction")]
-        public void Run([TimerTrigger("0 */1 * * * *")] MyInfo myTimer)
+        public async Task RunAsync([TimerTrigger("0 */1 * * * *")] MyInfo myTimer)
         {
             _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
             _logger.LogInformation($"Next timer schedule at: {myTimer.ScheduleStatus.Next}");
             DirectoryInfo assemblyDirectory = new DirectoryInfo(AppContext.BaseDirectory);
             Console.WriteLine(assemblyDirectory.FullName);
+            using var playwright = await Playwright.CreateAsync();
+            await using var browser = await playwright.Chromium.LaunchAsync();
+            var page = await browser.NewPageAsync();
+            await page.GotoAsync("https://playwright.dev");
+            Console.WriteLine($"page title is {await page.TitleAsync()}");
         }
     }
 
